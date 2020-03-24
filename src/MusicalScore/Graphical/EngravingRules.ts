@@ -59,6 +59,7 @@ export class EngravingRules {
     private noteHelperLinesOffset: number;
     private measureLeftMargin: number;
     private measureRightMargin: number;
+    private minimumMeasureWidth: number;
     private distanceBetweenLastInstructionAndRepetitionBarline: number;
     private arpeggioDistance: number;
     private idealStemLength: number;
@@ -176,8 +177,8 @@ export class EngravingRules {
     private maxInstructionsConstValue: number;
     private noteDistances: number[] = [1.0, 1.0, 1.3, 1.6, 2.0, 2.5, 3.0, 4.0];
     private noteDistancesScalingFactors: number[] = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0];
-    private durationDistanceDict: {[_: number]: number; } = {};
-    private durationScalingDistanceDict: {[_: number]: number; } = {};
+    private durationDistanceDict: { [_: number]: number; } = {};
+    private durationScalingDistanceDict: { [_: number]: number; } = {};
 
     private alignRests: number; // 0 = false, 1 = true, 2 = auto
     private fillEmptyMeasuresWithWholeRest: FillEmptyMeasuresWithWholeRests | number;
@@ -189,7 +190,7 @@ export class EngravingRules {
     private colorStemsLikeNoteheads: boolean;
     private colorFlags: boolean;
     private colorBeams: boolean;
-    private coloringSetCustom: Dictionary<NoteEnum|number, string>;
+    private coloringSetCustom: Dictionary<NoteEnum | number, string>;
     private defaultColorNotehead: string;
     private defaultColorRest: string;
     private defaultColorStem: string;
@@ -432,6 +433,7 @@ export class EngravingRules {
         this.defaultFontFamily = "Times New Roman"; // what OSMD was initially optimized for
         this.maxMeasureToDrawIndex = Number.MAX_VALUE;
         this.minMeasureToDrawIndex = 0;
+        this.minimumMeasureWidth = 0;
         this.renderComposer = true;
         this.renderTitle = true;
         this.renderSubtitle = true;
@@ -1378,10 +1380,10 @@ export class EngravingRules {
     public set NoteDistancesScalingFactors(value: number[]) {
         this.noteDistancesScalingFactors = value;
     }
-    public get DurationDistanceDict(): {[_: number]: number; } {
+    public get DurationDistanceDict(): { [_: number]: number; } {
         return this.durationDistanceDict;
     }
-    public get DurationScalingDistanceDict(): {[_: number]: number; } {
+    public get DurationScalingDistanceDict(): { [_: number]: number; } {
         return this.durationScalingDistanceDict;
     }
     public get AlignRests(): number {
@@ -1445,10 +1447,10 @@ export class EngravingRules {
     public set ColorBeams(value: boolean) {
         this.colorBeams = value;
     }
-    public get ColoringSetCurrent(): Dictionary<NoteEnum|number, string> {
+    public get ColoringSetCurrent(): Dictionary<NoteEnum | number, string> {
         return this.coloringSetCustom;
     }
-    public set ColoringSetCurrent(value: Dictionary<NoteEnum|number, string>) {
+    public set ColoringSetCurrent(value: Dictionary<NoteEnum | number, string>) {
         this.coloringSetCustom = value;
     }
     public get DefaultColorNotehead(): string {
@@ -1498,6 +1500,12 @@ export class EngravingRules {
     }
     public set MinMeasureToDrawIndex(value: number) {
         this.minMeasureToDrawIndex = value;
+    }
+    public get MinMeasureWidth(): number {
+        return this.minimumMeasureWidth;
+    }
+    public set MinMeasureWidth(value: number) {
+        this.minimumMeasureWidth = value;
     }
     public get RenderComposer(): boolean {
         return this.renderComposer;
@@ -1635,7 +1643,7 @@ export class EngravingRules {
                     this.durationScalingDistanceDict[2.0] = this.noteDistancesScalingFactors[i];
                     break;
                 default:
-                    // FIXME
+                // FIXME
             }
         }
     }

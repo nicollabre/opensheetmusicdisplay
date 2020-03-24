@@ -142,7 +142,9 @@ export class VexFlowMusicSheetCalculator extends MusicSheetCalculator {
     if (allVoices.length > 0) {
       // FIXME: The following ``+ 5.0'' is temporary: it was added as a workaround for
       // FIXME: a more relaxed formatting of voices
-      minStaffEntriesWidth = formatter.preCalculateMinTotalWidth(allVoices) / unitInPixels + 5.0;
+      minStaffEntriesWidth = EngravingRules.Rules.MinMeasureWidth
+        ? EngravingRules.Rules.MinMeasureWidth / unitInPixels + 5.0
+          : formatter.preCalculateMinTotalWidth(allVoices) / unitInPixels + 5.0;
       // firstMeasure.formatVoices = (w: number) => {
       //     formatter.format(allVoices, w);
       // };
