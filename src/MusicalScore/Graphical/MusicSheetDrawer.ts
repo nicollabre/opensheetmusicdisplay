@@ -166,7 +166,7 @@ export abstract class MusicSheetDrawer {
                 break;
             case TextAlignmentEnum.CenterBottom:
                 screenPosition.x -= bitmapWidth / 2;
-                screenPosition.y -= bitmapHeight;
+                screenPosition.y -= bitmapHeight * 1.5;
                 break;
             case TextAlignmentEnum.RightTop:
                 screenPosition.x -= bitmapWidth;
