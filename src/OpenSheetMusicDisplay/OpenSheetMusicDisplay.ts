@@ -426,7 +426,7 @@ export class OpenSheetMusicDisplay {
             this.rules.RenderMeasureNumbers = options.drawMeasureNumbers;
         }
         if (options.minimumMeasureWidth) {
-            EngravingRules.Rules.MinMeasureWidth = options.minimumMeasureWidth;
+            this.rules.MinMeasureWidth = options.minimumMeasureWidth;
         }
         if (options.drawLyrics !== undefined) {
             this.rules.RenderLyrics = options.drawLyrics;
