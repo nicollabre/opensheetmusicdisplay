@@ -17,7 +17,7 @@ export class GraphicalChordSymbolContainer extends GraphicalObject {
         super();
         this.chordSymbolContainer = chordSymbolContainer;
         this.boundingBox = new BoundingBox(this, parent);
-        this.calculateLabel(textHeight, transposeHalftones);
+        this.calculateLabel(textHeight, transposeHalftones, rules);
         this.rules = rules;
     }
     public get GetChordSymbolContainer(): ChordSymbolContainer {
@@ -26,8 +26,8 @@ export class GraphicalChordSymbolContainer extends GraphicalObject {
     public get GetGraphicalLabel(): GraphicalLabel {
         return this.graphicalLabel;
     }
-    private calculateLabel(textHeight: number, transposeHalftones: number): void {
-        const text: string = ChordSymbolContainer.calculateChordText(this.chordSymbolContainer, transposeHalftones);
+    private calculateLabel(textHeight: number, transposeHalftones: number, rules: EngravingRules): void {
+        const text: string = ChordSymbolContainer.calculateChordText(this.chordSymbolContainer, transposeHalftones, rules.RenderChordDegreeText);
         this.graphicalLabel = new GraphicalLabel(new Label(text), textHeight, TextAlignmentEnum.CenterBottom, this.rules, this.boundingBox);
         this.graphicalLabel.PositionAndShape.RelativePosition = new PointF2D(0.0, 0.0);
     }

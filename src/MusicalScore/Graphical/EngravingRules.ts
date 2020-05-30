@@ -60,6 +60,7 @@ export class EngravingRules {
     private measureLeftMargin: number;
     private measureRightMargin: number;
     private minimumMeasureWidth: number;
+    private renderChordDegreeText: boolean;
     private distanceBetweenLastInstructionAndRepetitionBarline: number;
     private arpeggioDistance: number;
     private idealStemLength: number;
@@ -434,6 +435,7 @@ export class EngravingRules {
         this.maxMeasureToDrawIndex = Number.MAX_VALUE;
         this.minMeasureToDrawIndex = 0;
         this.minimumMeasureWidth = 0;
+        this.renderChordDegreeText = false;
         this.renderComposer = true;
         this.renderTitle = true;
         this.renderSubtitle = true;
@@ -1506,6 +1508,12 @@ export class EngravingRules {
     }
     public set MinMeasureWidth(value: number) {
         this.minimumMeasureWidth = value;
+    }
+    public get RenderChordDegreeText(): boolean {
+        return this.renderChordDegreeText;
+    }
+    public set RenderChordDegreeText(value: boolean) {
+        this.renderChordDegreeText = value;
     }
     public get RenderComposer(): boolean {
         return this.renderComposer;

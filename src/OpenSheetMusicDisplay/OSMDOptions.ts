@@ -97,6 +97,8 @@ export interface IOSMDOptions {
     drawFromMeasureNumber?: number;
     /** Set minimum Measure Width if Voices are not present */
     minimumMeasureWidth?: number;
+    /** Chord Degree Text is a part of XML as well. Initial value is false, in order to render text altogether degree value please enable it */
+    renderChordDegreeText?: boolean;
     /** Whether to fill measures that don't have notes given in the XML with whole rests (visible = 1, invisible = 2, for layouting). Default No (0). */
     fillEmptyMeasuresWithWholeRest?: FillEmptyMeasuresWithWholeRests | number;
     /** Whether to set the wanted stem direction by xml (default) or automatically. */

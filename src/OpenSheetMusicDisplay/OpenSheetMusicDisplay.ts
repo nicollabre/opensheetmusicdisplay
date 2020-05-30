@@ -425,6 +425,9 @@ export class OpenSheetMusicDisplay {
         if (options.drawMeasureNumbers !== undefined) {
             this.rules.RenderMeasureNumbers = options.drawMeasureNumbers;
         }
+        if (options.renderChordDegreeText) {
+            this.rules.RenderChordDegreeText = options.renderChordDegreeText;
+        }
         if (options.minimumMeasureWidth) {
             this.rules.MinMeasureWidth = options.minimumMeasureWidth;
         }
