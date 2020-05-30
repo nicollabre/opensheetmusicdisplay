@@ -443,6 +443,9 @@ export class OpenSheetMusicDisplay {
         if (options.fingeringPosition !== undefined) {
             this.rules.FingeringPosition = AbstractExpression.PlacementEnumFromString(options.fingeringPosition);
         }
+        if (options.instructionsOnEveryStaff !== undefined) {
+            this.rules.InstructionsOnEveryStaff = options.instructionsOnEveryStaff;
+        }
         if (options.fingeringInsideStafflines !== undefined) {
             this.rules.FingeringInsideStafflines = options.fingeringInsideStafflines;
         }

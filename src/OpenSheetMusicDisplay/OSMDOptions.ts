@@ -83,6 +83,8 @@ export interface IOSMDOptions {
      * Default left. Auto, above, below experimental (potential collisions because bounding box not correct)
      */
     fingeringPosition?: string;
+    /** Add instructions on every rendered staff */
+    instructionsOnEveryStaff?: boolean;
     /** For above/below fingerings, whether to draw them directly above/below notes (default), or above/below staffline. */
     fingeringInsideStafflines?: boolean;
     /** Whether to draw hidden/invisible notes (print-object="no" in XML). Default false. Not yet supported. */ // TODO

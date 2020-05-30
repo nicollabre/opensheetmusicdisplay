@@ -460,6 +460,9 @@ export class MusicSystemBuilder {
         let clefAdded: boolean = false;
         let keyAdded: boolean = false;
         let rhythmAdded: boolean = false;
+        if (isSystemStartMeasure && !isFirstSourceMeasure && !this.rules.InstructionsOnEveryStaff) {
+            return measure.beginInstructionsWidth;
+        }
         if (currentClef !== undefined) {
             measure.addClefAtBegin(currentClef);
             clefAdded = true;

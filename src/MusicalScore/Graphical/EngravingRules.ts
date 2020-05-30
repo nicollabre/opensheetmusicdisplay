@@ -49,6 +49,7 @@ export class EngravingRules {
     private beamWidth: number;
     private beamSpaceWidth: number;
     private beamForwardLength: number;
+    private instructionsOnEveryStaff: boolean;
     private clefLeftMargin: number;
     private clefRightMargin: number;
     private betweenKeySymbolsDistance: number;
@@ -421,6 +422,7 @@ export class EngravingRules {
         this.arpeggiosGoAcrossVoices = false; // safe option, as otherwise arpeggios will always go across all voices in Vexflow, which is often unwanted
         this.renderArpeggios = true;
         this.renderSlurs = true;
+        this.instructionsOnEveryStaff = false;
         this.coloringMode = ColoringMode.XML;
         this.coloringEnabled = true;
         this.colorStemsLikeNoteheads = false;
@@ -682,6 +684,12 @@ export class EngravingRules {
     }
     public set BetweenKeySymbolsDistance(value: number) {
         this.betweenKeySymbolsDistance = value;
+    }
+    public get InstructionsOnEveryStaff(): boolean {
+        return this.instructionsOnEveryStaff;
+    }
+    public set InstructionsOnEveryStaff(value: boolean) {
+        this.instructionsOnEveryStaff = value;
     }
     public get ClefLeftMargin(): number {
         return this.clefLeftMargin;
