@@ -437,6 +437,9 @@ export class OpenSheetMusicDisplay {
         if (options.drawSlurs !== undefined) {
             this.rules.RenderSlurs = options.drawSlurs;
         }
+        if (options.labelBottomDistanceMultiplier !== undefined) {
+            this.rules.LabelBottomDistanceMultiplier = options.labelBottomDistanceMultiplier;
+        }
         if (options.measureNumberInterval !== undefined) {
             this.rules.MeasureNumberLabelOffset = options.measureNumberInterval;
         }

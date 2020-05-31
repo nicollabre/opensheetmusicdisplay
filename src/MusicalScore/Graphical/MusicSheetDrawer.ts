@@ -155,7 +155,7 @@ export abstract class MusicSheetDrawer {
                 screenPosition.y -= bitmapHeight / 2;
                 break;
             case TextAlignmentEnum.LeftBottom:
-                screenPosition.y -= bitmapHeight;
+                screenPosition.y -= bitmapHeight * this.rules.LabelBottomDistanceMultiplier;
                 break;
             case TextAlignmentEnum.CenterTop:
                 screenPosition.x -= bitmapWidth / 2;
@@ -166,7 +166,7 @@ export abstract class MusicSheetDrawer {
                 break;
             case TextAlignmentEnum.CenterBottom:
                 screenPosition.x -= bitmapWidth / 2;
-                screenPosition.y -= bitmapHeight * 1.5;
+                screenPosition.y -= bitmapHeight * this.rules.LabelBottomDistanceMultiplier;
                 break;
             case TextAlignmentEnum.RightTop:
                 screenPosition.x -= bitmapWidth;
@@ -177,7 +177,7 @@ export abstract class MusicSheetDrawer {
                 break;
             case TextAlignmentEnum.RightBottom:
                 screenPosition.x -= bitmapWidth;
-                screenPosition.y -= bitmapHeight;
+                screenPosition.y -= bitmapHeight * this.rules.LabelBottomDistanceMultiplier;
                 break;
             default:
                 throw new ArgumentOutOfRangeException("");

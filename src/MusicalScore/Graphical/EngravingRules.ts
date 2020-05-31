@@ -62,6 +62,7 @@ export class EngravingRules {
     private measureRightMargin: number;
     private minimumMeasureWidth: number;
     private renderChordDegreeText: boolean;
+    private labelBottomDistanceMultiplier: number;
     private distanceBetweenLastInstructionAndRepetitionBarline: number;
     private arpeggioDistance: number;
     private idealStemLength: number;
@@ -247,6 +248,7 @@ export class EngravingRules {
         this.titleTopDistance = 9.0;
         this.titleBottomDistance = 1.0;
         this.staffDistance = 7.0;
+        this.labelBottomDistanceMultiplier = 1;
         this.betweenStaffDistance = 5.0;
 
         // System Sizing and Label Variables
@@ -570,6 +572,12 @@ export class EngravingRules {
     }
     public set TitleBottomDistance(value: number) {
         this.titleBottomDistance = value;
+    }
+    public get LabelBottomDistanceMultiplier(): number {
+        return this.labelBottomDistanceMultiplier;
+    }
+    public set LabelBottomDistanceMultiplier(value: number) {
+        this.labelBottomDistanceMultiplier = value;
     }
     public get SystemComposerDistance(): number {
         return this.systemComposerDistance;
