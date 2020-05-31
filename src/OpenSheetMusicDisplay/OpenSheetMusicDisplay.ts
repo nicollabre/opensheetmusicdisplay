@@ -440,6 +440,9 @@ export class OpenSheetMusicDisplay {
         if (options.labelBottomDistanceMultiplier !== undefined) {
             this.rules.LabelBottomDistanceMultiplier = options.labelBottomDistanceMultiplier;
         }
+        if (options.chordLabelPosition !== undefined) {
+            this.rules.ChordLabelPosition = options.chordLabelPosition;
+        }
         if (options.measureNumberInterval !== undefined) {
             this.rules.MeasureNumberLabelOffset = options.measureNumberInterval;
         }

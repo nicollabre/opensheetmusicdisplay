@@ -62,6 +62,7 @@ export class EngravingRules {
     private measureRightMargin: number;
     private minimumMeasureWidth: number;
     private renderChordDegreeText: boolean;
+    private chordLabelPosition: number;
     private labelBottomDistanceMultiplier: number;
     private distanceBetweenLastInstructionAndRepetitionBarline: number;
     private arpeggioDistance: number;
@@ -430,6 +431,7 @@ export class EngravingRules {
         this.colorStemsLikeNoteheads = false;
         this.colorBeams = true;
         this.colorFlags = true;
+        this.chordLabelPosition = 5;
         this.defaultColorNotehead = "#000000"; // black. undefined is only black if a note's color hasn't been changed before.
         this.defaultColorRest = this.defaultColorNotehead;
         this.defaultColorStem = this.defaultColorNotehead;
@@ -1530,6 +1532,12 @@ export class EngravingRules {
     }
     public set RenderChordDegreeText(value: boolean) {
         this.renderChordDegreeText = value;
+    }
+    public get ChordLabelPosition(): number {
+        return this.chordLabelPosition;
+    }
+    public set ChordLabelPosition(value: number) {
+        this.chordLabelPosition = value;
     }
     public get RenderComposer(): boolean {
         return this.renderComposer;

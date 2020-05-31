@@ -103,6 +103,8 @@ export interface IOSMDOptions {
     minimumMeasureWidth?: number;
     /** Chord Degree Text is a part of XML as well. Initial value is false, in order to render text altogether degree value please enable it */
     renderChordDegreeText?: boolean;
+    /** Chord render postioning on relative position ( LeftTop = 0, LeftCenter = 1, LeftBottom = 2, CenterTop = 3, CenterCenter = 4, CenterBottom = 5, RightTop = 6, RightCenter = 7, RightBottom = 8) */
+    chordLabelPosition?: number;
     /** Whether to fill measures that don't have notes given in the XML with whole rests (visible = 1, invisible = 2, for layouting). Default No (0). */
     fillEmptyMeasuresWithWholeRest?: FillEmptyMeasuresWithWholeRests | number;
     /** Whether to set the wanted stem direction by xml (default) or automatically. */
