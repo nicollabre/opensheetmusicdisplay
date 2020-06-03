@@ -54,7 +54,6 @@ export class MusicSystemBuilder {
     }
 
     public buildMusicSystems(): MusicSystem[] {
-        let previousMeasureEndsSystem: boolean = false;
         const systemMaxWidth: number = this.getFullPageSystemWidth();
         this.measureListIndex = 0;
         this.currentSystemParams = new SystemBuildParameters();
@@ -76,7 +75,6 @@ export class MusicSystemBuilder {
                 graphicalMeasures[idx].resetLayout();
             }
             const sourceMeasure: SourceMeasure = graphicalMeasures[0].parentSourceMeasure;
-            const sourceMeasureEndsSystem: boolean = sourceMeasure.BreakSystemAfter;
             const isSystemStartMeasure: boolean = this.currentSystemParams.IsSystemStartMeasure();
             const isFirstSourceMeasure: boolean = sourceMeasure === this.graphicalMusicSheet.ParentMusicSheet.getFirstSourceMeasure();
             let currentMeasureBeginInstructionsWidth: number = this.rules.MeasureLeftMargin;
@@ -105,7 +103,7 @@ export class MusicSystemBuilder {
 
             // Check if there are key or rhythm change instructions within the next measure:
             let nextSourceMeasure: SourceMeasure = undefined;
-            if (this.measureListIndex + 1 < this.measureList.length) {
+            if (this.rules.InstructionsOnEveryStaff && this.measureListIndex + 1 < this.measureList.length) {
                 const nextGraphicalMeasures: GraphicalMeasure[] = this.measureList[this.measureListIndex + 1];
                 nextSourceMeasure = nextGraphicalMeasures[0].parentSourceMeasure;
                 if (nextSourceMeasure.hasBeginInstructions()) {
@@ -126,10 +124,9 @@ export class MusicSystemBuilder {
                 this.measureListIndex++;
             } else {
                 // finalize current system and prepare a new one
-                this.finalizeCurrentAndCreateNewSystem(graphicalMeasures, previousMeasureEndsSystem, doXmlPageBreak);
+                this.finalizeCurrentAndCreateNewSystem(graphicalMeasures, true, doXmlPageBreak);
                 // don't increase measure index to check this measure now again
             }
-            previousMeasureEndsSystem = sourceMeasureEndsSystem;
         }
         this.finalizeCurrentAndCreateNewSystem(this.measureList[this.measureList.length - 1], true, false);
         return this.musicSystems;

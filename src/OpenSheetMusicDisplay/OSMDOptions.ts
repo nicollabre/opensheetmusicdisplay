@@ -37,6 +37,8 @@ export interface IOSMDOptions {
      * E.g., a half-transparent red would be "#FF000080", invisible/transparent would be "#00000000" or "#12345600".
      */
     defaultColorNotehead?: string;
+    /** Stave lines color */
+    staveLinesColor?: string;
     /** Default color for a note stem. Default black (undefined). */
     defaultColorStem?: string;
     /** Default color for rests. Default black (undefined). */

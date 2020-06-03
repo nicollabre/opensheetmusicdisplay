@@ -201,6 +201,7 @@ export class EngravingRules {
     private defaultColorLabel: string;
     private defaultColorTitle: string;
     private defaultFontFamily: string;
+    private staveLinesColor: string;
     private maxMeasureToDrawIndex: number;
     private minMeasureToDrawIndex: number;
     /** Whether to render a label for the composer of the piece at the top of the sheet. */
@@ -437,6 +438,7 @@ export class EngravingRules {
         this.defaultColorStem = this.defaultColorNotehead;
         this.defaultColorLabel = this.defaultColorNotehead;
         this.defaultColorTitle = this.defaultColorNotehead;
+        this.staveLinesColor = "#999999";
         this.defaultFontFamily = "Times New Roman"; // what OSMD was initially optimized for
         this.maxMeasureToDrawIndex = Number.MAX_VALUE;
         this.minMeasureToDrawIndex = 0;
@@ -1502,6 +1504,12 @@ export class EngravingRules {
     }
     public set DefaultColorTitle(value: string) {
         this.defaultColorTitle = value;
+    }
+    public get StaveLinesColor(): string {
+        return this.staveLinesColor;
+    }
+    public set StaveLinesColor(value: string) {
+        this.staveLinesColor = value;
     }
     public get DefaultFontFamily(): string {
         return this.defaultFontFamily;

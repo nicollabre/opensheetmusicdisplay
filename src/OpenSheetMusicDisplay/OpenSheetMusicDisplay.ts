@@ -473,6 +473,9 @@ export class OpenSheetMusicDisplay {
         if (options.defaultColorNotehead) {
             this.rules.DefaultColorNotehead = options.defaultColorNotehead;
         }
+        if (options.staveLinesColor) {
+            this.rules.StaveLinesColor = options.staveLinesColor;
+        }
         if (options.defaultColorRest) {
             this.rules.DefaultColorRest = options.defaultColorRest;
         }
