@@ -81,10 +81,10 @@ export class ChordSymbolContainer {
                 }
             }
 
-            text += chordSymbol.ChordDegree.value;
             if (chordSymbol.ChordDegree.alteration !== AccidentalEnum.NONE) {
                 text += ChordSymbolContainer.getTextForAccidental(chordSymbol.ChordDegree.alteration);
             }
+            text += chordSymbol.ChordDegree.value;
         }
         return text;
     }

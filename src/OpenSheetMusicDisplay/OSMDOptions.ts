@@ -77,6 +77,8 @@ export interface IOSMDOptions {
      * See the [measureNumberInterval] option, default is 2.
      */
     drawMeasureNumbers?: boolean;
+    /** Draw first measure number on the beginning of the systems */
+    drawStartMeasureNumber?: boolean;
     /** The interval of measure numbers to draw, i.e. it draws the measure number above the beginning label every x measures. Default 2. */
     measureNumberInterval?: number;
     /** Whether to draw fingerings (only left to the note for now). Default true (unless solo part). */
@@ -85,8 +87,8 @@ export interface IOSMDOptions {
      * Default left. Auto, above, below experimental (potential collisions because bounding box not correct)
      */
     fingeringPosition?: string;
-    /** Lable bottom distance multiplier */
-    labelBottomDistanceMultiplier?: number;
+    /** Chord label offset from the staff line */
+    chordSymbolYOffset?: number;
     /** Add instructions on every rendered staff */
     instructionsOnEveryStaff?: boolean;
     /** For above/below fingerings, whether to draw them directly above/below notes (default), or above/below staffline. */

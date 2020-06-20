@@ -437,11 +437,14 @@ export class OpenSheetMusicDisplay {
         if (options.drawSlurs !== undefined) {
             this.rules.RenderSlurs = options.drawSlurs;
         }
-        if (options.labelBottomDistanceMultiplier !== undefined) {
-            this.rules.LabelBottomDistanceMultiplier = options.labelBottomDistanceMultiplier;
+        if (options.chordSymbolYOffset !== undefined) {
+            this.rules.ChordSymbolYOffset = options.chordSymbolYOffset;
         }
         if (options.chordLabelPosition !== undefined) {
             this.rules.ChordLabelPosition = options.chordLabelPosition;
+        }
+        if (options.drawStartMeasureNumber !== undefined) {
+            this.rules.DrawStartMeasureNumber = options.drawStartMeasureNumber;
         }
         if (options.measureNumberInterval !== undefined) {
             this.rules.MeasureNumberLabelOffset = options.measureNumberInterval;

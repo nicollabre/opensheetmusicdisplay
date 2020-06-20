@@ -63,7 +63,6 @@ export class EngravingRules {
     private minimumMeasureWidth: number;
     private renderChordDegreeText: boolean;
     private chordLabelPosition: number;
-    private labelBottomDistanceMultiplier: number;
     private distanceBetweenLastInstructionAndRepetitionBarline: number;
     private arpeggioDistance: number;
     private idealStemLength: number;
@@ -98,6 +97,7 @@ export class EngravingRules {
     private fingeringLabelFontHeight: number;
     private measureNumberLabelHeight: number;
     private measureNumberLabelOffset: number;
+    private drawStartMeasureNumber: boolean;
     /** Whether tuplets should display ratio (3:2 instead of 3 for triplet). Default false. */
     private tupletsRatioed: boolean;
     /** Whether all tuplets should be bracketed (e.g. |--5--| instead of 5). Default false.
@@ -250,7 +250,6 @@ export class EngravingRules {
         this.titleTopDistance = 9.0;
         this.titleBottomDistance = 1.0;
         this.staffDistance = 7.0;
-        this.labelBottomDistanceMultiplier = 1;
         this.betweenStaffDistance = 5.0;
 
         // System Sizing and Label Variables
@@ -337,6 +336,7 @@ export class EngravingRules {
         this.fingeringLabelFontHeight = 1.7;
 
         // Tuplets, MeasureNumber and TupletNumber Labels
+        this.drawStartMeasureNumber = false;
         this.measureNumberLabelHeight = 1.5 * EngravingRules.unit;
         this.measureNumberLabelOffset = 2;
         this.tupletsRatioed = false;
@@ -576,12 +576,6 @@ export class EngravingRules {
     }
     public set TitleBottomDistance(value: number) {
         this.titleBottomDistance = value;
-    }
-    public get LabelBottomDistanceMultiplier(): number {
-        return this.labelBottomDistanceMultiplier;
-    }
-    public set LabelBottomDistanceMultiplier(value: number) {
-        this.labelBottomDistanceMultiplier = value;
     }
     public get SystemComposerDistance(): number {
         return this.systemComposerDistance;
@@ -960,6 +954,12 @@ export class EngravingRules {
     }
     public set MeasureNumberLabelHeight(value: number) {
         this.measureNumberLabelHeight = value;
+    }
+    public get DrawStartMeasureNumber(): boolean {
+        return this.drawStartMeasureNumber;
+    }
+    public set DrawStartMeasureNumber(value: boolean) {
+        this.drawStartMeasureNumber = value;
     }
     public get MeasureNumberLabelOffset(): number {
         return this.measureNumberLabelOffset;
