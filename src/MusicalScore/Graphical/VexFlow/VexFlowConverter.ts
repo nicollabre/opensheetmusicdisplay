@@ -1,4 +1,4 @@
-import Vex = require("vexflow");
+import Vex from "vexflow";
 import {ClefEnum} from "../../VoiceData/Instructions/ClefInstruction";
 import {ClefInstruction} from "../../VoiceData/Instructions/ClefInstruction";
 import {Pitch} from "../../../Common/DataObjects/Pitch";
@@ -15,7 +15,7 @@ import {SystemLinesEnum} from "../SystemLinesEnum";
 import {FontStyles} from "../../../Common/Enums/FontStyles";
 import {Fonts} from "../../../Common/Enums/Fonts";
 import {OutlineAndFillStyleEnum, OUTLINE_AND_FILL_STYLE_DICT} from "../DrawingEnums";
-import * as log from "loglevel";
+import log from "loglevel";
 import { ArticulationEnum, StemDirectionType } from "../../VoiceData/VoiceEntry";
 import { SystemLinePosition } from "../SystemLinePosition";
 import { GraphicalVoiceEntry } from "../GraphicalVoiceEntry";
@@ -117,7 +117,7 @@ export class VexFlowConverter {
         const octave: number = pitch.Octave - note.Clef().OctaveOffset + 3;
         const notehead: Notehead = note.sourceNote.Notehead;
         let noteheadCode: string = "";
-        if (notehead !== undefined) {
+        if (notehead) {
             noteheadCode = this.NoteHeadCode(notehead);
         }
         return [fund + "n/" + octave + noteheadCode, acc, note.Clef()];
@@ -207,6 +207,28 @@ export class VexFlowConverter {
                     xShift = rules.WholeRestXShiftVexflow * unitInPixels; // TODO find way to make dependent on the modifiers
                     // affects VexFlowStaffEntry.calculateXPosition()
                 }
+                if (note.sourceNote.ParentStaff.Voices.length > 1) {
+                    let visibleVoiceEntries: number = 0;
+                    //Find all visible voice entries (don't want invisible rests/notes causing visible shift)
+                    for (let idx: number = 0; idx < note.sourceNote.ParentStaffEntry.VoiceEntries.length ; idx++) {
+                        if (note.sourceNote.ParentStaffEntry.VoiceEntries[idx].Notes[0].PrintObject) {
+                            visibleVoiceEntries++;
+                        }
+                    }
+                    //If we have more than one visible voice entry, shift the rests so no collision occurs
+                    if (visibleVoiceEntries > 1) {
+                        switch (note.sourceNote.ParentVoiceEntry?.ParentVoice?.VoiceId) {
+                            case 1:
+                                keys = ["e/5"];
+                                break;
+                            case 2:
+                                keys = ["f/4"];
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
                 break;
             }
 
@@ -260,6 +282,17 @@ export class VexFlowConverter {
         } else {
             vfnote = new Vex.Flow.StaveNote(vfnoteStruct);
         }
+        if (rules.LedgerLineWidth || rules.LedgerLineStrokeStyle) {
+            if (!((vfnote as any).ledgerLineStyle)) {
+                (vfnote as any).ledgerLineStyle = {};
+            }
+            if (rules.LedgerLineWidth) {
+                (vfnote as any).ledgerLineStyle.lineWidth = rules.LedgerLineWidth;
+            }
+            if (rules.LedgerLineStrokeStyle) {
+                (vfnote as any).ledgerLineStyle.strokeStyle = rules.LedgerLineStrokeStyle;
+            }
+        }
 
         if (rules.ColoringEnabled) {
             const defaultColorStem: string = rules.DefaultColorStem;
@@ -285,7 +318,7 @@ export class VexFlowConverter {
             // when the stem is connected to a beamed main note (e.g. Haydn Concertante bar 57)
             gve.parentVoiceEntry.WantedStemDirection = gve.notes[0].sourceNote.NoteBeam.Notes[0].ParentVoiceEntry.WantedStemDirection;
         }
-        if (gve.parentVoiceEntry !== undefined) {
+        if (gve.parentVoiceEntry) {
             const wantedStemDirection: StemDirectionType = gve.parentVoiceEntry.WantedStemDirection;
             switch (wantedStemDirection) {
                 case(StemDirectionType.Up):
@@ -336,7 +369,7 @@ export class VexFlowConverter {
     }
 
     public static generateArticulations(vfnote: Vex.Flow.StemmableNote, articulations: ArticulationEnum[]): void {
-        if (vfnote === undefined || vfnote.getAttribute("type") === "GhostNote") {
+        if (!vfnote || vfnote.getAttribute("type") === "GhostNote") {
             return;
         }
         // Articulations:
@@ -400,7 +433,7 @@ export class VexFlowConverter {
                     break;
                 }
             }
-            if (vfArt !== undefined) {
+            if (vfArt) {
                 vfArt.setPosition(vfArtPosition);
                 (vfnote as StaveNote).addModifier(0, vfArt);
             }
@@ -455,7 +488,7 @@ export class VexFlowConverter {
                 return;
             }
         }
-        if (vfOrna !== undefined) {
+        if (vfOrna) {
             if (oContainer.AccidentalBelow !== AccidentalEnum.NONE) {
                 vfOrna.setLowerAccidental(Pitch.accidentalVexflow(oContainer.AccidentalBelow));
             }
@@ -650,7 +683,7 @@ export class VexFlowConverter {
      * @returns {string}
      */
     public static keySignature(key: KeyInstruction): string {
-        if (key === undefined) {
+        if (!key) {
             return undefined;
         }
         let ret: string;
@@ -707,10 +740,10 @@ export class VexFlowConverter {
      * @returns {string}
      */
     public static font(fontSize: number, fontStyle: FontStyles = FontStyles.Regular,
-                       font: Fonts = Fonts.TimesNewRoman, rules: EngravingRules): string {
+                       font: Fonts = Fonts.TimesNewRoman, rules: EngravingRules, fontFamily: string = undefined): string {
         let style: string = "normal";
         let weight: string = "normal";
-        const family: string = "'" + rules.DefaultFontFamily + "'"; // default "'Times New Roman'"
+        let family: string = `'${rules.DefaultFontFamily}'`; // default "'Times New Roman'"
 
         switch (fontStyle) {
             case FontStyles.Bold:
@@ -737,8 +770,11 @@ export class VexFlowConverter {
             default:
         }
 
+        if (fontFamily && fontFamily !== "default") {
+            family = `'${fontFamily}'`;
+        }
 
-        return  style + " " + weight + " " + Math.floor(fontSize) + "px " + family;
+        return style + " " + weight + " " + Math.floor(fontSize) + "px " + family;
     }
 
     /**

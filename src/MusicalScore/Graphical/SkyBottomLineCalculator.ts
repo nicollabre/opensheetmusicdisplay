@@ -7,7 +7,7 @@ import { PointF2D } from "../../Common/DataObjects/PointF2D";
 import { CanvasVexFlowBackend } from "./VexFlow/CanvasVexFlowBackend";
 import { VexFlowMeasure } from "./VexFlow/VexFlowMeasure";
 import { unitInPixels } from "./VexFlow/VexFlowMusicSheetDrawer";
-import * as log from "loglevel";
+import log from "loglevel";
 import { BoundingBox } from "./BoundingBox";
 /**
  * This class calculates and holds the skyline and bottom line information.
@@ -68,7 +68,12 @@ export class SkyBottomLineCalculator {
             vsStaff.setWidth(width);
             measure.format();
             vsStaff.setWidth(oldMeasureWidth);
-            measure.draw(ctx);
+            try {
+                measure.draw(ctx);
+                // Vexflow errors can happen here, then our complete rendering loop would halt without catching errors.
+            } catch (ex) {
+                log.warn("SkyBottomLineCalculator.calculateLines.draw", ex);
+            }
 
             // imageData.data is a Uint8ClampedArray representing a one-dimensional array containing the data in the RGBA order
             // RGBA is 32 bit word with 8 bits red, 8 bits green, 8 bits blue and 8 bit alpha. Alpha should be 0 for all background colors.
@@ -146,8 +151,8 @@ export class SkyBottomLineCalculator {
             log.debug(`SkyLine calculation was not correct (${this.mSkyLine.length} instead of ${arrayLength})`);
         }
         // Remap the values from 0 to +/- height in units
-        this.mSkyLine = this.mSkyLine.map(v => (v - Math.max(...this.mSkyLine)) / unitInPixels);
-        this.mBottomLine = this.mBottomLine.map(v => (v - Math.min(...this.mBottomLine)) / unitInPixels + this.StaffLineParent.StaffHeight);
+        this.mSkyLine = this.mSkyLine.map(v => (v - Math.max(...this.mSkyLine)) / unitInPixels + this.StaffLineParent.TopLineOffset);
+        this.mBottomLine = this.mBottomLine.map(v => (v - Math.min(...this.mBottomLine)) / unitInPixels + this.StaffLineParent.BottomLineOffset);
     }
 
     /**
@@ -166,8 +171,8 @@ export class SkyBottomLineCalculator {
 
     /**
      * This method updates the SkyLine for a given Wedge.
-     * @param start Start point of the wedge
-     * @param end End point of the wedge
+     * @param start Start point of the wedge (the point where both lines meet)
+     * @param end End point of the wedge (the end of the most extreme line: upper line for skyline, lower line for bottomline)
      */
     public updateSkyLineWithWedge(start: PointF2D, end: PointF2D): void {
         // FIXME: Refactor if wedges will be added. Current status is that vexflow will be used for this
@@ -483,7 +488,7 @@ export class SkyBottomLineCalculator {
         startIndex = Math.floor(startIndex * this.SamplingUnit);
         endIndex = Math.ceil(endIndex * this.SamplingUnit);
 
-        if (skyBottomArray === undefined) {
+        if (!skyBottomArray) {
             // Highly questionable
             return Number.MAX_VALUE;
         }
@@ -516,7 +521,7 @@ export class SkyBottomLineCalculator {
         startIndex = Math.floor(startIndex * this.SamplingUnit);
         endIndex = Math.ceil(endIndex * this.SamplingUnit);
 
-        if (skyBottomArray === undefined) {
+        if (!skyBottomArray) {
             // Highly questionable
             return Number.MIN_VALUE;
         }

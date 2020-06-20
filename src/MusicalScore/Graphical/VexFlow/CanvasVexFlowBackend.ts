@@ -1,4 +1,4 @@
-import Vex = require("vexflow");
+import Vex from "vexflow";
 
 import {VexFlowBackend} from "./VexFlowBackend";
 import {FontStyles} from "../../../Common/Enums/FontStyles";
@@ -66,7 +66,7 @@ export class CanvasVexFlowBackend extends VexFlowBackend {
         (<any>this.ctx).clearRect(0, 0, (<any>this.canvas).width, (<any>this.canvas).height);
 
         // set background color if not transparent
-        if (this.rules.PageBackgroundColor !== undefined) {
+        if (this.rules.PageBackgroundColor) {
             this.ctx.save();
             // note that this will hide the cursor
             this.ctx.setFillStyle(this.rules.PageBackgroundColor);
@@ -83,14 +83,16 @@ export class CanvasVexFlowBackend extends VexFlowBackend {
         this.CanvasRenderingCtx.translate(x, y);
     }
     public renderText(fontHeight: number, fontStyle: FontStyles, font: Fonts, text: string,
-                      heightInPixel: number, screenPosition: PointF2D, color: string = undefined): void  {
+                      heightInPixel: number, screenPosition: PointF2D,
+                      color: string = undefined, fontFamily: string = undefined): void  {
         const old: string = this.CanvasRenderingCtx.font;
         this.CanvasRenderingCtx.save();
         this.CanvasRenderingCtx.font = VexFlowConverter.font(
             fontHeight,
             fontStyle,
             font,
-            this.rules
+            this.rules,
+            fontFamily
         );
         this.CanvasRenderingCtx.fillStyle = color;
         this.CanvasRenderingCtx.strokeStyle = color;

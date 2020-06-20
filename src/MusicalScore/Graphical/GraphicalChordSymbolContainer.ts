@@ -5,6 +5,7 @@ import {BoundingBox} from "./BoundingBox";
 import {GraphicalObject} from "./GraphicalObject";
 import {PointF2D} from "../../Common/DataObjects/PointF2D";
 import {EngravingRules} from "./EngravingRules";
+import { KeyInstruction } from "../VoiceData/Instructions/KeyInstruction";
 
 export class GraphicalChordSymbolContainer extends GraphicalObject {
     private chordSymbolContainer: ChordSymbolContainer;
@@ -12,11 +13,11 @@ export class GraphicalChordSymbolContainer extends GraphicalObject {
     private rules: EngravingRules;
 
     constructor(chordSymbolContainer: ChordSymbolContainer, parent: BoundingBox, textHeight: number,
-                transposeHalftones: number, rules: EngravingRules) {
+                keyInstruction: KeyInstruction, transposeHalftones: number, rules: EngravingRules) {
         super();
         this.chordSymbolContainer = chordSymbolContainer;
         this.boundingBox = new BoundingBox(this, parent);
-        this.calculateLabel(textHeight, transposeHalftones, rules);
+        this.calculateLabel(textHeight, transposeHalftones, keyInstruction);
         this.rules = rules;
     }
     public get GetChordSymbolContainer(): ChordSymbolContainer {
@@ -25,9 +26,9 @@ export class GraphicalChordSymbolContainer extends GraphicalObject {
     public get GetGraphicalLabel(): GraphicalLabel {
         return this.graphicalLabel;
     }
-    private calculateLabel(textHeight: number, transposeHalftones: number, rules: EngravingRules): void {
-        const text: string = ChordSymbolContainer.calculateChordText(this.chordSymbolContainer, transposeHalftones, rules.RenderChordDegreeText);
-        this.graphicalLabel = new GraphicalLabel(new Label(text), textHeight, rules.ChordLabelPosition, this.rules, this.boundingBox);
+    private calculateLabel(textHeight: number, transposeHalftones: number, keyInstruction: KeyInstruction): void {
+        const text: string = ChordSymbolContainer.calculateChordText(this.chordSymbolContainer, transposeHalftones, keyInstruction);
+        this.graphicalLabel = new GraphicalLabel(new Label(text), textHeight, TextAlignmentEnum.CenterBottom, this.rules, this.boundingBox);
         this.graphicalLabel.PositionAndShape.RelativePosition = new PointF2D(0.0, 0.0);
     }
 }
