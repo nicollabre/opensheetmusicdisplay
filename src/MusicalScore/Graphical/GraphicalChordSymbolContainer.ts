@@ -10,15 +10,13 @@ import { KeyInstruction } from "../VoiceData/Instructions/KeyInstruction";
 export class GraphicalChordSymbolContainer extends GraphicalObject {
     private chordSymbolContainer: ChordSymbolContainer;
     private graphicalLabel: GraphicalLabel;
-    private rules: EngravingRules;
 
     constructor(chordSymbolContainer: ChordSymbolContainer, parent: BoundingBox, textHeight: number,
                 keyInstruction: KeyInstruction, transposeHalftones: number, rules: EngravingRules) {
         super();
         this.chordSymbolContainer = chordSymbolContainer;
         this.boundingBox = new BoundingBox(this, parent);
-        this.calculateLabel(textHeight, transposeHalftones, keyInstruction);
-        this.rules = rules;
+        this.calculateLabel(textHeight, transposeHalftones, keyInstruction, rules);
     }
     public get GetChordSymbolContainer(): ChordSymbolContainer {
         return this.chordSymbolContainer;
@@ -26,9 +24,9 @@ export class GraphicalChordSymbolContainer extends GraphicalObject {
     public get GetGraphicalLabel(): GraphicalLabel {
         return this.graphicalLabel;
     }
-    private calculateLabel(textHeight: number, transposeHalftones: number, keyInstruction: KeyInstruction): void {
-        const text: string = ChordSymbolContainer.calculateChordText(this.chordSymbolContainer, transposeHalftones, keyInstruction);
-        this.graphicalLabel = new GraphicalLabel(new Label(text), textHeight, TextAlignmentEnum.CenterBottom, this.rules, this.boundingBox);
+    private calculateLabel(textHeight: number, transposeHalftones: number, keyInstruction: KeyInstruction, rules: EngravingRules): void {
+        const text: string = ChordSymbolContainer.calculateChordText(this.chordSymbolContainer, transposeHalftones, keyInstruction, rules.RenderChordDegreeText);
+        this.graphicalLabel = new GraphicalLabel(new Label(text), textHeight, rules.ChordLabelPosition, rules, this.boundingBox);
         this.graphicalLabel.PositionAndShape.RelativePosition = new PointF2D(0.0, 0.0);
     }
 }

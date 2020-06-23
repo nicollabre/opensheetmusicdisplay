@@ -61,5 +61,6 @@ export interface IGraphicalSymbolFactory {
         sourceStaffEntry: SourceStaffEntry,
         graphicalStaffEntry: GraphicalStaffEntry,
         keyInstruction: KeyInstruction,
-        transposeHalftones: number): void;
+        transposeHalftones: number,
+        activeClefs: ClefInstruction[]): void;
 }

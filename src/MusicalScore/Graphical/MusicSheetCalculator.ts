@@ -330,13 +330,13 @@ export abstract class MusicSheetCalculator {
      */
     protected calculateMeasureNumberPlacement(musicSystem: MusicSystem): void {
         const staffLine: StaffLine = musicSystem.StaffLines[0];
-        let currentMeasureNumber: number = staffLine.Measures[0].MeasureNumber;
-        let labelOffsetX: number = 0;
+        //let currentMeasureNumber: number = staffLine.Measures[0].MeasureNumber;
+        //let labelOffsetX: number = 0;
         for (const measure of staffLine.Measures) {
-            if (measure.MeasureNumber === 0 || measure.MeasureNumber === 1) {
+            /*if (measure.MeasureNumber === 0 || measure.MeasureNumber === 1) {
                 currentMeasureNumber = measure.MeasureNumber;
             }
-            /*if (measure !== staffLine.Measures[0] && this.rules.MeasureNumberLabelXOffset) {
+            if (measure !== staffLine.Measures[0] && this.rules.MeasureNumberLabelXOffset) {
                 labelOffsetX = this.rules.MeasureNumberLabelXOffset;
             } else {
                 labelOffsetX = 0; // don't offset label for first measure in staffline
@@ -2102,7 +2102,8 @@ export abstract class MusicSheetCalculator {
                         sourceStaffEntry,
                         graphicalStaffEntry,
                         accidentalCalculator.ActiveKeyInstruction,
-                        this.graphicalMusicSheet.ParentMusicSheet.Transpose);
+                        this.graphicalMusicSheet.ParentMusicSheet.Transpose,
+                        activeClefs);
                 }
             }
         }

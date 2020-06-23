@@ -1,5 +1,7 @@
 import { DrawingParametersEnum, ColoringModes } from "../MusicalScore/Graphical/DrawingParameters";
+import { ChordSymbolEnum } from "../MusicalScore/VoiceData/ChordSymbolContainer";
 import { FontStyles } from "../Common/Enums/FontStyles";
+import { Dictionary } from "typescript-collections";
 
 /** Possible options for the OpenSheetMusicDisplay constructor and osmd.setOptions(). None are mandatory.
  *  Note that after using setOptions(), you have to call osmd.render() again to make changes visible.
@@ -102,6 +104,8 @@ export interface IOSMDOptions {
     fingeringPosition?: string;
     /** Chord label offset from the staff line */
     chordSymbolYOffset?: number;
+    /** Override Chord Symbol */
+    chordSymbolLabelTexts?: Dictionary<ChordSymbolEnum, string>;
     /** Add instructions on every rendered staff */
     instructionsOnEveryStaff?: boolean;
     /** For above/below fingerings, whether to draw them directly above/below notes (default), or above/below staffline. */

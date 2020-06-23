@@ -449,6 +449,9 @@ export class OpenSheetMusicDisplay {
         if (options.chordSymbolYOffset !== undefined) {
             this.rules.ChordSymbolYOffset = options.chordSymbolYOffset;
         }
+        if (options.chordSymbolLabelTexts !== undefined) {
+            this.rules.ChordSymbolLabelTexts = options.chordSymbolLabelTexts;
+        }
         if (options.chordLabelPosition !== undefined) {
             this.rules.ChordLabelPosition = options.chordLabelPosition;
         }

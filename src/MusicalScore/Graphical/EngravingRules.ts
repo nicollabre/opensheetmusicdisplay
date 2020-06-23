@@ -1006,7 +1006,9 @@ export class EngravingRules {
         return this.chordSymbolLabelTexts;
     }
     public set ChordSymbolLabelTexts(value: Dictionary<ChordSymbolEnum, string>) {
-        this.chordSymbolLabelTexts = value;
+        Object.keys(value).forEach(item => {
+            this.chordSymbolLabelTexts.setValue(<ChordSymbolEnum>parseInt(item, 10), value[item]);
+        });
     }
     public get MeasureNumberLabelHeight(): number {
         return this.measureNumberLabelHeight;
