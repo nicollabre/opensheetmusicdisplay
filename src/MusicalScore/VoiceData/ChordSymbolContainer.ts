@@ -35,7 +35,10 @@ export class ChordSymbolContainer {
         return this.degree;
     }
 
-    public static calculateChordText(chordSymbol: ChordSymbolContainer, transposeHalftones: number, keyInstruction: KeyInstruction, renderChordText?: boolean): string {
+    public static calculateChordText(chordSymbol: ChordSymbolContainer,
+                                     transposeHalftones: number,
+                                     keyInstruction: KeyInstruction,
+                                     renderChordText?: boolean): string {
         let transposedRootPitch: Pitch = chordSymbol.RootPitch;
 
         if (MusicSheetCalculator.transposeCalculator) {

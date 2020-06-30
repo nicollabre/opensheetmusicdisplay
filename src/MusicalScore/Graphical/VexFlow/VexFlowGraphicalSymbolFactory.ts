@@ -173,7 +173,7 @@ export class VexFlowGraphicalSymbolFactory implements IGraphicalSymbolFactory {
                                 activeClefs: ClefInstruction[]): void {
         const rules: EngravingRules = graphicalStaffEntry.parentMeasure.parentSourceMeasure.Rules;
         let xShift: number = 0;
-        let yShift: number = activeClefs[0].ClefType === ClefEnum.F ? 3 : 0;
+        const yShift: number = activeClefs[0].ClefType === ClefEnum.F ? 3 : 0;
         const chordSymbolSpacing: number = rules.ChordSymbolXSpacing;
         for (const chordSymbolContainer of sourceStaffEntry.ChordContainers) {
             const graphicalChordSymbolContainer: GraphicalChordSymbolContainer =

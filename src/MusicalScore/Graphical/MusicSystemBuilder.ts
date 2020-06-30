@@ -137,7 +137,7 @@ export class MusicSystemBuilder {
                 prevMeasureEndsPart = sourceMeasureEndsPart;
             } else {
                 // finalize current system and prepare a new one
-                this.finalizeCurrentAndCreateNewSystem(graphicalMeasures, false, true, doXmlPageBreak);
+                this.finalizeCurrentAndCreateNewSystem(graphicalMeasures, true, false, doXmlPageBreak);
                 // don't increase measure index to check this measure now again
                 // don't set prevMeasureEndsPart in this case! because we will loop with the same measure again.
             }
