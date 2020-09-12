@@ -115,13 +115,22 @@ export class SvgVexFlowBackend extends VexFlowBackend {
         this.ctx.fillText(text, screenPosition.x, screenPosition.y + heightInPixel);
         this.ctx.restore();
     }
-    public renderRectangle(rectangle: RectangleF2D, styleId: number, alpha: number = 1): void {
+    public renderRectangle(rectangle: RectangleF2D, styleId: number, alpha: number = 1, attributes?: Record<string, string>): void {
         this.ctx.save();
+        if (attributes) {
+            Object.keys(attributes).forEach(key => {
+                this.ctx.attributes[key] = attributes[key];
+            });
+        }
         this.ctx.attributes.fill = VexFlowConverter.style(styleId);
         this.ctx.attributes["fill-opacity"] = alpha;
         this.ctx.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
         this.ctx.restore();
         this.ctx.attributes["fill-opacity"] = 1;
+    }
+
+    public renderAreas(rectangle: RectangleF2D, layer: number, styleId: number, alpha: number, attributes: Record<string, string>): void {
+        this.renderRectangle(rectangle, styleId, alpha, attributes);
     }
 
     public renderLine(start: PointF2D, stop: PointF2D, color: string = "#FF0000FF", lineWidth: number = 2): void {
@@ -151,7 +160,7 @@ export class SvgVexFlowBackend extends VexFlowBackend {
             points[2].y,
             points[3].x,
             points[3].y
-            );
+        );
         this.ctx.lineTo(points[7].x, points[7].y);
         this.ctx.bezierCurveTo(
             points[6].x,
@@ -160,7 +169,7 @@ export class SvgVexFlowBackend extends VexFlowBackend {
             points[5].y,
             points[4].x,
             points[4].y
-            );
+        );
         this.ctx.lineTo(points[0].x, points[0].y);
         //this.ctx.stroke();
         this.ctx.closePath();

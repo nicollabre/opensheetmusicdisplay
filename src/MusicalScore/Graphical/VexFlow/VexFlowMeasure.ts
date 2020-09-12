@@ -38,6 +38,20 @@ import {SkyBottomLineCalculator} from "../SkyBottomLineCalculator";
 
 // type StemmableNote = Vex.Flow.StemmableNote;
 
+export class MusicSheetStave extends Vex.Flow.Stave {
+    private clef: string;
+
+    public getClef(): string {
+        return this.clef;
+    }
+
+    constructor(x: number, y: number, width: number, options?: { vertical_bar_width?: number, glyph_spacing_px?: number,
+                num_lines?: number, fill_style?: string, spacing_between_lines_px?: number,
+                space_above_staff_ln?: number, space_below_staff_ln?: number, top_text_position?: number }) {
+        super(x, y, width, options);
+    }
+}
+
 export class VexFlowMeasure extends GraphicalMeasure {
     constructor(staff: Staff, sourceMeasure: SourceMeasure = undefined, staffLine: StaffLine = undefined) {
         super(staff, sourceMeasure, staffLine);
@@ -68,7 +82,7 @@ export class VexFlowMeasure extends GraphicalMeasure {
     /** The repetition instructions given as words or symbols (coda, dal segno..) */
     public vfRepetitionWords: Vex.Flow.Repetition[] = [];
     /** The VexFlow Stave (= one measure in a staffline) */
-    protected stave: Vex.Flow.Stave;
+    protected stave: MusicSheetStave | Vex.Flow.Stave;
     /** VexFlow StaveConnectors (vertical lines) */
     protected connectors: Vex.Flow.StaveConnector[] = [];
     /** Intermediate object to construct beams */
@@ -103,7 +117,7 @@ export class VexFlowMeasure extends GraphicalMeasure {
 
         // TODO save beginning and end bar type, set these again after new stave.
 
-        this.stave = new Vex.Flow.Stave(0, 0, 0, {
+        this.stave = new MusicSheetStave(0, 0, 0, {
             fill_style: this.rules.StaveLinesColor,
             space_above_staff_ln: 0,
             space_below_staff_ln: 0
@@ -1280,7 +1294,7 @@ export class VexFlowMeasure extends GraphicalMeasure {
      * Return the VexFlow Stave corresponding to this graphicalMeasure
      * @returns {Vex.Flow.Stave}
      */
-    public getVFStave(): Vex.Flow.Stave {
+    public getVFStave(): MusicSheetStave | Vex.Flow.Stave {
         return this.stave;
     }
 

@@ -94,6 +94,8 @@ public abstract getContext(): Vex.IRenderContext;
    */
   public abstract renderRectangle(rectangle: RectangleF2D, styleId: number, alpha: number): void;
 
+  public abstract renderAreas(rectangle: RectangleF2D, layer: number, styleId: number, alpha: number, attributes: Record<string, string>): void;
+
   public abstract renderLine(start: PointF2D, stop: PointF2D, color: string, lineWidth: number): void;
 
   public abstract renderCurve(points: PointF2D[]): void;

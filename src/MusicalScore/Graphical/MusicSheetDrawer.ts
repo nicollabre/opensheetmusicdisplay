@@ -215,6 +215,10 @@ export abstract class MusicSheetDrawer {
         throw new Error("not implemented");
     }
 
+    protected renderAreas(rectangle: RectangleF2D, layer: number, styleId: number, alpha: number, attributes: Record<string, string>): void {
+        throw new Error("not implemented");
+    }
+
     protected drawScrollIndicator(): void {
         // empty
     }
@@ -491,6 +495,12 @@ export abstract class MusicSheetDrawer {
         }
     }
 
+    protected drawAreas(areas: { attributes: Record<string, string>, rectangle: RectangleF2D }[]): void {
+        areas.forEach(area => {
+            this.renderAreas(area.rectangle, 1, <number>OutlineAndFillStyleEnum.Comment1, 0, area.attributes);
+        });
+    }
+
     /**
      * Draw bounding boxes aroung GraphicalObjects
      * @param startBox Bounding Box that is used as a staring point to recursively go through all child elements
@@ -505,17 +515,17 @@ export abstract class MusicSheetDrawer {
                                                          startBox.BorderMarginRight - startBox.BorderMarginLeft,
                                                          startBox.BorderMarginBottom - startBox.BorderMarginTop);
             this.drawLineAsHorizontalRectangle(new GraphicalLine(
-                                                             new PointF2D(startBox.AbsolutePosition.x - 1, startBox.AbsolutePosition.y),
-                                                             new PointF2D(startBox.AbsolutePosition.x + 1, startBox.AbsolutePosition.y),
-                                                             0.1,
-                                                             OutlineAndFillStyleEnum.BaseWritingColor),
+                                               new PointF2D(startBox.AbsolutePosition.x - 1, startBox.AbsolutePosition.y),
+                                               new PointF2D(startBox.AbsolutePosition.x + 1, startBox.AbsolutePosition.y),
+                                               0.1,
+                                               OutlineAndFillStyleEnum.BaseWritingColor),
                                                layer - 1);
 
             this.drawLineAsVerticalRectangle(new GraphicalLine(
-                                                                 new PointF2D(startBox.AbsolutePosition.x, startBox.AbsolutePosition.y - 1),
-                                                                 new PointF2D(startBox.AbsolutePosition.x, startBox.AbsolutePosition.y + 1),
-                                                                 0.1,
-                                                                 OutlineAndFillStyleEnum.BaseWritingColor),
+                                             new PointF2D(startBox.AbsolutePosition.x, startBox.AbsolutePosition.y - 1),
+                                             new PointF2D(startBox.AbsolutePosition.x, startBox.AbsolutePosition.y + 1),
+                                             0.1,
+                                             OutlineAndFillStyleEnum.BaseWritingColor),
                                              layer - 1);
 
             tmpRect = this.applyScreenTransformationForRect(tmpRect);

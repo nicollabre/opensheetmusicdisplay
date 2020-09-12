@@ -62,3 +62,4 @@ node_modules/
 bin/gh_pages_deploy_key
 bin/gh_pages_deploy_key.pub
 package-lock.json
+/.vs

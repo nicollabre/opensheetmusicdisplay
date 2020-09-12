@@ -67,6 +67,7 @@ export class OpenSheetMusicDisplay {
     private container: HTMLElement;
     private backendType: BackendType;
     private needBackendUpdate: boolean;
+    private reader: MusicSheetReader;
     private sheet: MusicSheet;
     private drawer: VexFlowMusicSheetDrawer;
     private drawBoundingBox: string;
@@ -152,8 +153,8 @@ export class OpenSheetMusicDisplay {
             return Promise.reject(new Error("OpenSheetMusicDisplay: Document is not a valid 'partwise' MusicXML"));
         }
         const score: IXmlElement = new IXmlElement(scorePartwiseElement);
-        const reader: MusicSheetReader = new MusicSheetReader(undefined, this.rules);
-        this.sheet = reader.createMusicSheet(score, "Untitled Score");
+        this.reader = new MusicSheetReader(undefined, this.rules);
+        this.sheet = this.reader.createMusicSheet(score, "Untitled Score");
         if (this.sheet === undefined) {
             // error loading sheet, probably already logged, do nothing
             return Promise.reject(new Error("given music sheet was incomplete or could not be loaded."));
@@ -175,6 +176,52 @@ export class OpenSheetMusicDisplay {
         if (this.drawingParameters.drawCursors && this.cursor) {
             this.cursor.init(this.sheet.MusicPartManager, this.graphic);
         }
+    }
+
+    public drawAreas(areas: string): void {
+        if (this.drawer) {
+            this.drawer.clear();
+        }
+
+        this.render();
+
+        this.drawer.drawSelectionAreas(areas);
+    }
+
+    private updateMeasures(measureId: number, action: string, callback: () => {}): void {
+        const mutationObserver: MutationCallback = (mutations: any): void => {
+            mutations.forEach(mutation => {
+                if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+                    observer.disconnect();
+
+                    if (callback) {
+                        callback();
+                    }
+                }
+            });
+        };
+
+        const observer: MutationObserver = new MutationObserver(mutationObserver);
+
+        observer.observe(this.container, { childList: true });
+
+
+        if (action === "add") {
+            this.sheet = this.reader.addMeasure(measureId);
+        } else if (action === "remove") {
+            this.sheet = this.reader.removeMeasure(measureId);
+        }
+
+        this.updateGraphic();
+        this.render();
+    }
+
+    public removeMeasure(measureId: number, callback: () => {}): void {
+        this.updateMeasures(measureId, "remove", callback);
+    }
+
+    public addMeasure(measureId: number, callback: () => {}): void {
+        this.updateMeasures(measureId, "add", callback);
     }
 
     /**
@@ -337,7 +384,7 @@ export class OpenSheetMusicDisplay {
         if (options.drawingParameters) {
             this.drawingParameters.DrawingParametersEnum =
                 (<any>DrawingParametersEnum)[options.drawingParameters.toLowerCase()];
-                // see DrawingParameters.ts: set DrawingParametersEnum, and DrawingParameters.ts:setForCompactTightMode()
+            // see DrawingParameters.ts: set DrawingParametersEnum, and DrawingParameters.ts:setForCompactTightMode()
         }
 
         const backendNotInitialized: boolean = !this.drawer || !this.drawer.Backends || this.drawer.Backends.length < 1;

@@ -1,7 +1,7 @@
 import Vex from "vexflow";
 import { MusicSheetDrawer } from "../MusicSheetDrawer";
 import { RectangleF2D } from "../../../Common/DataObjects/RectangleF2D";
-import { VexFlowMeasure } from "./VexFlowMeasure";
+import { VexFlowMeasure, MusicSheetStave } from "./VexFlowMeasure";
 import { PointF2D } from "../../../Common/DataObjects/PointF2D";
 import { GraphicalLabel } from "../GraphicalLabel";
 import { VexFlowTextMeasurer } from "./VexFlowTextMeasurer";
@@ -35,6 +35,55 @@ import { GraphicalUnknownExpression } from "../GraphicalUnknownExpression";
  * @type number
  */
 export const unitInPixels: number = 10;
+interface IOctavesSigntaure {
+    octave?: string;
+    lines?: number;
+    spaces?: number;
+}
+
+interface IStaffLineAreas {
+    octave: string;
+    note: string;
+    height: number;
+}
+
+const TREBLE_OCTAVES: IOctavesSigntaure[] = [{
+    lines: 3,
+    octave: "small",
+    spaces: 4
+}, {
+    lines: 4,
+    octave: "first",
+    spaces: 3
+}, {
+    lines: 3,
+    octave: "second",
+    spaces: 4
+}, {
+    lines: 4,
+    octave: "third",
+    spaces: 3
+}];
+
+const BASS_OCTAVES: IOctavesSigntaure[] = [{
+    lines: 3,
+    octave: "contra",
+    spaces: 4
+}, {
+    lines: 4,
+    octave: "great",
+    spaces: 3
+}, {
+    lines: 3,
+    octave: "small",
+    spaces: 4
+}, {
+    lines: 4,
+    octave: "first",
+    spaces: 3
+}];
+
+
 
 export class VexFlowMusicSheetDrawer extends MusicSheetDrawer {
     private backend: VexFlowBackend;
@@ -161,6 +210,141 @@ export class VexFlowMusicSheetDrawer extends MusicSheetDrawer {
         for (const staffEntry of measure.staffEntries) {
             this.drawStaffEntry(staffEntry);
         }
+    }
+
+
+    public drawSelectionAreas(areaName: string): void {
+        for (const page of this.graphicalMusicSheet.MusicPages) {
+            this.backend = this.Backends[page.PageNumber - 1];
+
+            page.MusicSystems.forEach(musicSystem => {
+                const { StaffLines } = musicSystem;
+
+                if (StaffLines) {
+                    this.drawAreas(this.calculateAreas(StaffLines[0], areaName));
+                }
+            });
+        }
+    }
+
+    private stafLineAreas(clef: string, lineHeight: number, spaceHeight: number): IStaffLineAreas[] {
+        let octaves: IOctavesSigntaure[] = [];
+        const pitchValues: string[] = ["C", "D", "E", "F", "G", "A", "B"];
+
+        const lineAreas: IStaffLineAreas[] = [];
+
+        switch (clef) {
+            case "treble":
+                octaves = TREBLE_OCTAVES;
+                break;
+            case "bass":
+                octaves = BASS_OCTAVES;
+                break;
+            default:
+                octaves = TREBLE_OCTAVES;
+                break;
+        }
+
+        octaves.forEach(octave => {
+            let noteIndex: number = 0;
+
+            for (let i: number = 0; i < octave.lines + octave.spaces; i++) {
+                let height: number = 0;
+                if (octave.lines > octave.spaces) {
+                    height = i % 2 === 0 ? lineHeight : spaceHeight;
+                } else {
+                    height = i % 2 === 0 ? spaceHeight : lineHeight;
+                }
+
+                lineAreas.push({
+                    height,
+                    note: pitchValues[noteIndex],
+                    octave: octave.octave
+                });
+
+                if (i > 0 && i % 6 === 0) {
+                    noteIndex = 0;
+                } else {
+                    noteIndex++;
+                }
+            }
+        });
+
+        return lineAreas;
+    }
+
+    private calculateAreas(stafLine: StaffLine, areaName: string): { attributes: Record<string, string>, rectangle: RectangleF2D }[] {
+        const areas: { attributes: Record<string, string>, rectangle: RectangleF2D }[] = [];
+        const measures: VexFlowMeasure[] = stafLine.Measures as VexFlowMeasure[];
+        const firstMeasureStave: MusicSheetStave = measures[0].getVFStave() as MusicSheetStave;
+        const clef: string = firstMeasureStave.getClef();
+
+        if (areaName === "measures") {
+            measures.forEach(measure => {
+                const stave: MusicSheetStave = measure.getVFStave() as MusicSheetStave;
+
+                areas.push({
+                    attributes: {
+                        measure: measure.MeasureNumber.toString(),
+                        stroke: "transparent"
+                    },
+                    rectangle: new RectangleF2D(
+                        stave.getX(),
+                        stave.getBottomY() - stave.getHeight(),
+                        stave.getWidth(),
+                        stave.getHeight() - stave.options.spacing_between_lines_px
+                    )
+                });
+            });
+        } else if (areaName === "voices") {
+            measures.forEach(measure => {
+                let rectPosition: number;
+                const stave: MusicSheetStave = measure.getVFStave() as MusicSheetStave;
+                const lineSpacing: number = stave.options.spacing_between_lines_px;
+                const { lineWidth } = stave.getContext() as Vex.Flow.SVGContext;
+                const lineWidthPx: number = lineWidth * 0.2 * unitInPixels;
+                const spaceWidthPx: number = lineSpacing * 0.8;
+
+                switch (clef) {
+                    case "treble":
+                        rectPosition = stave.getBottomY() - 10 * (lineWidthPx + spaceWidthPx);
+                        break;
+                    case "bass":
+                        rectPosition = stave.getBottomY() - 9 * (lineWidthPx + spaceWidthPx);
+                        break;
+                    default:
+                        rectPosition = stave.getBottomY() - 10 * (lineWidthPx + spaceWidthPx);
+                        break;
+                }
+
+
+
+                this.stafLineAreas(
+                    clef,
+                    lineWidthPx,
+                    spaceWidthPx
+                ).reverse().forEach(sla => {
+                    areas.push({
+                        attributes: {
+                            measure: measure.MeasureNumber.toString(),
+                            octave: sla.octave,
+                            stroke: "transparent",
+                            voice: sla.note
+                        },
+                        rectangle: new RectangleF2D(
+                            stave.getX(),
+                            rectPosition,
+                            stave.getWidth(),
+                            sla.height
+                        )
+                    });
+
+                    rectPosition += sla.height;
+                });
+            });
+        }
+
+        return areas;
     }
 
     // private drawPixel(coord: PointF2D): void {
@@ -349,7 +533,7 @@ export class VexFlowMusicSheetDrawer extends MusicSheetDrawer {
                 // } else if (abstractGraphicalExpression instanceof GraphicalMoodExpression) {
                 //     GraphicalMoodExpression; graphicalMood = (GraphicalMoodExpression); abstractGraphicalExpression;
                 //     drawLabel(graphicalMood.GetGraphicalLabel, <number>GraphicalLayers.Notes);
-            // Draw Unknown
+                // Draw Unknown
             } else if (abstractGraphicalExpression instanceof GraphicalUnknownExpression) {
                 this.drawLabel(abstractGraphicalExpression.Label, <number>GraphicalLayers.Notes);
             } else {
@@ -435,5 +619,9 @@ export class VexFlowMusicSheetDrawer extends MusicSheetDrawer {
      */
     protected applyScreenTransformationForRect(rectangle: RectangleF2D): RectangleF2D {
         return new RectangleF2D(rectangle.x * unitInPixels, rectangle.y * unitInPixels, rectangle.width * unitInPixels, rectangle.height * unitInPixels);
+    }
+
+    protected renderAreas(rectangle: RectangleF2D, layer: number, styleId: number, alpha: number, attributes: Record<string, string>): void {
+        this.backend.renderAreas(rectangle, layer, styleId, alpha, attributes);
     }
 }

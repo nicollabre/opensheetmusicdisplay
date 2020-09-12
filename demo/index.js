@@ -1,5 +1,5 @@
 import { OpenSheetMusicDisplay, BackendType } from '../src/OpenSheetMusicDisplay';
-import * as jsPDF  from '../node_modules/jspdf-yworks/dist/jspdf.min'
+import * as jsPDF from '../node_modules/jspdf-yworks/dist/jspdf.min'
 import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
 
 /*jslint browser:true */
@@ -32,7 +32,7 @@ import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
             "OSMD Function Test - Chord Symbols": "OSMD_function_test_chord_symbols.musicxml",
             "OSMD Function Test - Color (from XML)": "OSMD_function_test_color.musicxml",
             "OSMD Function Test - Drumset": "OSMD_function_test_drumset.musicxml",
-            "OSMD Function Test - Drums on one Line": "OSMD_Function_Test_Drums_one_line_snare_plus_piano.musicxml", 
+            "OSMD Function Test - Drums on one Line": "OSMD_Function_Test_Drums_one_line_snare_plus_piano.musicxml",
             "OSMD Function Test - Expressions": "OSMD_function_test_expressions.musicxml",
             "OSMD Function Test - Expressions Overlap": "OSMD_function_test_expressions_overlap.musicxml",
             "OSMD Function Test - Grace Notes": "OSMD_function_test_GraceNotes.xml",
@@ -81,7 +81,7 @@ import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
         debugClearBtn,
         selectPageSizes,
         printPdfBtns;
-    
+
     // manage option setting and resetting for specific samples, e.g. in the autobeam sample autobeam is set to true, otherwise reset to previous state
     // TODO design a more elegant option state saving & restoring system, though that requires saving the options state in OSMD
     var minMeasureToDrawStashed = 1;
@@ -156,7 +156,7 @@ import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
                 document.body.style.overflow = paramOverflow;
             }
         }
-        
+
         var compactMode = paramCompactMode && paramCompactMode !== '0';
         var measureRangeStart = paramMeasureRangeStart ? Number.parseInt(paramMeasureRangeStart) : 0;
         var measureRangeEnd = paramMeasureRangeEnd ? Number.parseInt(paramMeasureRangeEnd) : Number.MAX_SAFE_INTEGER;
@@ -174,7 +174,7 @@ import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
 
         var horizontalScrolling = paramHorizontalScrolling === '1';
         var singleHorizontalStaffline = paramSingleHorizontalStaffline === '1';
-        
+
         // set the backendSelect debug controls dropdown menu selected item
         //console.log("true: " + backendSelect && backendType.toLowerCase && backendType.toLowerCase() === "canvas");
         // TODO somehow backendSelect becomes undefined here:
@@ -237,7 +237,7 @@ import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
             var elementsToEnable = [
                 selectSample, selectBounding, selectPageSize, backendSelect, backendSelectDiv, divControls
             ];
-            for (var i=0; i<elementsToEnable.length; i++) {
+            for (var i = 0; i < elementsToEnable.length; i++) {
                 if (elementsToEnable[i]) { // make sure this element is not null/exists in the index.html, e.g. github.io demo has different index.html
                     if (elementsToEnable[i].style) {
                         elementsToEnable[i].style.visibility = defaultVisibilityValue;
@@ -412,6 +412,13 @@ import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
 
         // Create OSMD object and canvas
         openSheetMusicDisplay = new OpenSheetMusicDisplay(canvas, {
+            chordSymbolLabelTexts: { 5: '7' },
+            minimumMeasureWidth: 220,
+            chordSymbolYOffset: 3.0,
+            drawStartMeasureNumber: true,
+            measureNumberInterval: 8,
+            staveLinesColor: "#000000",
+            chordLabelPosition: 2,
             autoResize: true,
             backend: backendType,
             //backend: "canvas",
@@ -425,8 +432,8 @@ import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
             // fingeringInsideStafflines: "true", // default: false. true draws fingerings directly above/below notes
             setWantedStemDirectionByXml: true, // try false, which was previously the default behavior
             // drawUpToMeasureNumber: 3, // draws only up to measure 3, meaning it draws measure 1 to 3 of the piece.
-            drawFromMeasureNumber : measureRangeStart,
-            drawUpToMeasureNumber : measureRangeEnd,
+            drawFromMeasureNumber: measureRangeStart,
+            drawUpToMeasureNumber: measureRangeEnd,
 
             //drawMeasureNumbers: false, // disable drawing measure numbers
             //measureNumberInterval: 4, // draw measure numbers only every 4 bars (and at the beginning of a new system)
@@ -527,7 +534,7 @@ import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
         // test parameter: ?openUrl=https://opensheetmusiceducation.org/index.php?gf-download=2020%2F01%2FJohannSebastianBach_PraeludiumInCDur_BWV846_1.xml&endUrl&form-id=1&field-id=4&hash=c4ba271ef08204a26cbd4cd2d751c53b78f238c25ddbb1f343e1172f2ce2aa53
         //   (enable the console.log at the end of this method for testing)
         // working test parameter in local demo: ?openUrl=OSMD_function_test_all.xml&endUrl
-    
+
         if (parameterName === 'openUrl') {
             let startParameterName = 'openUrl=';
             let endParameterName = '&endUrl';
@@ -596,6 +603,14 @@ import * as svg2pdf from '../node_modules/svg2pdf.js/dist/svg2pdf.min';
             }
         ).then(
             function () {
+                setTimeout(() => {
+                    openSheetMusicDisplay.addMeasure(3, () => { console.log('added') });
+                }, 2000)
+
+                setTimeout(() => {
+                    openSheetMusicDisplay.removeMeasure(2, () => { console.log('removed') });
+                }, 6000)
+
                 return onLoadingEnd(isCustom);
             }, function (e) {
                 errorLoadingOrRenderingSheet(e, "loading");

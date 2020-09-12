@@ -145,6 +145,10 @@ export class CanvasVexFlowBackend extends VexFlowBackend {
         this.ctx.fill();
     }
 
+    public renderAreas(): void {
+        throw new Error("not implemented");
+    }
+
     private ctx: Vex.Flow.CanvasContext;
 
     public get CanvasRenderingCtx(): CanvasRenderingContext2D {
